@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'katalon-ecs' }
+  agent { label 'katalon-ecs-only' }
 
   options {
     timestamps()
@@ -16,18 +16,15 @@ pipeline {
       steps {
         sh '''
           set -e
-          echo "=== BASIC NODE INFO ==="
+          echo "NODE_NAME=$NODE_NAME"
+          echo "NODE_LABELS=$NODE_LABELS"
           hostname
           whoami
           pwd
 
-          echo "=== ROOT CONTENTS ==="
           ls -la
-
-          echo "=== FIND PROJECT FILES ==="
           find . -maxdepth 3 -type f | sort
 
-          echo "=== VERIFY NESTED PROJECT FILE ==="
           test -f "katalon_test_clean/katalon_test_clean.prj"
           test -f "katalon_test_clean/Test Suites/Smoke.ts"
         '''
@@ -38,9 +35,6 @@ pipeline {
       steps {
         sh '''
           set -e
-          echo "=== VERIFY KATALON TOOLING ==="
-          hostname
-          whoami
           command -v katalonc
           katalonc -version || true
         '''
