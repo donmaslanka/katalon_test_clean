@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'katalon' }
+  agent { label 'ecs-katalon' }
 
   options {
     timestamps()
@@ -34,6 +34,19 @@ pipeline {
       }
     }
 
+    stage('Verify Katalon Runtime') {
+      steps {
+        sh '''
+          set -e
+          echo "=== VERIFY KATALON TOOLING ==="
+          whoami
+          hostname
+          command -v katalonc
+          katalonc -version || true
+        '''
+      }
+    }
+
     stage('Run Katalon Smoke Test') {
       steps {
         dir('katalon_test_clean') {
@@ -64,4 +77,3 @@ pipeline {
     }
   }
 }
-
