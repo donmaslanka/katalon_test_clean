@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'katalon' }
+  agent { label 'katalon-ecs' }
 
   options {
     timestamps()
