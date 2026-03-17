@@ -1,5 +1,5 @@
 pipeline {
-  agent { label 'ecs-katalon' }
+  agent { label 'katalon' }
 
   options {
     timestamps()
@@ -39,8 +39,8 @@ pipeline {
         sh '''
           set -e
           echo "=== VERIFY KATALON TOOLING ==="
-          whoami
           hostname
+          whoami
           command -v katalonc
           katalonc -version || true
         '''
