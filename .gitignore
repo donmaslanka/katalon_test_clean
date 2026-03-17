@@ -1,0 +1,18 @@
+# Katalon transient / local artifacts
+/bin/
+/Libs/Temp*.groovy
+/Libs/Temp*.class
+/Reports/
+/.classpath
+/.project
+/.settings/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Logs and screenshots
+*.log
+*.png
