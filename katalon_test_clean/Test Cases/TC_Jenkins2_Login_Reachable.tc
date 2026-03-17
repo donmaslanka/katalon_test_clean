@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>TC_Jenkins2_Login_Reachable</name>
+   <tag></tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>8004b9b9-910d-467f-8549-0a12ab6b21e3</testCaseGuid>
+</TestCaseEntity>
