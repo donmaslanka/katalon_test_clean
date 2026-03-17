@@ -28,8 +28,8 @@ pipeline {
           find . -maxdepth 3 -type f | sort
 
           echo "=== VERIFY NESTED PROJECT FILE ==="
-          test -f katalon_test_clean/katalon_test_clean.prj
-          test -f katalon_test_clean/Test\ Suites/Smoke.ts
+          test -f "katalon_test_clean/katalon_test_clean.prj"
+          test -f "katalon_test_clean/Test Suites/Smoke.ts"
         '''
       }
     }
