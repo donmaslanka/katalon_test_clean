@@ -1,32 +1,73 @@
 pipeline {
     agent { label 'ec2-agent-01' }
 
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+    }
+
     environment {
         KATALON_API_KEY = credentials('katalon-api-key')
+        KATALON_PROJECT  = 'katalon_test_clean.prj'
+        KATALON_SUITE    = 'Test Suites/Smoke'
+        KATALON_BROWSER  = 'Chrome'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Run Katalon Tests') {
+        stage('Preflight') {
             steps {
                 sh '''
-                katalonc \
-                -runMode=console \
-                -projectPath="$WORKSPACE/katalon_test_clean.prj" \
-                -testSuitePath="Test Suites/Smoke" \
-                -browserType="Chrome" \
-                -apiKey="$KATALON_API_KEY" \
-                -orgID="2333388" \
-                -retry=0
+                    set -eux
+                    echo "Workspace: $WORKSPACE"
+                    hostname
+                    pwd
+                    ls -la
+                    which git || true
+                    git --version || true
+                    which java || true
+                    java -version || true
+                    which katalonc || true
+
+                    test -f "$WORKSPACE/$KATALON_PROJECT"
                 '''
             }
         }
 
+        stage('Run Katalon') {
+            steps {
+                sh '''
+                    set -eux
+
+                    katalonc \
+                      -noSplash \
+                      -runMode=console \
+                      -projectPath="$WORKSPACE/$KATALON_PROJECT" \
+                      -testSuitePath="$KATALON_SUITE" \
+                      -browserType="$KATALON_BROWSER" \
+                      -apiKey="$KATALON_API_KEY" \
+                      -orgID="2333388" \
+                      -retry=0
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'Reports/**/*,report/**/*,reports/**/*', allowEmptyArchive: true
+            junit testResults: '**/*.xml', allowEmptyResults: true
+        }
+        success {
+            echo 'Katalon execution completed successfully.'
+        }
+        failure {
+            echo 'Katalon execution failed. Check console output and archived reports.'
+        }
     }
 }
